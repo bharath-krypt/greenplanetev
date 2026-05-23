@@ -22,7 +22,7 @@ export function HorizontalCategoryMenu() {
       <nav
         id="quick-category-menu"
         aria-label="Filter by category"
-        className="sticky z-[12] border-y border-border bg-surface pl-28 before:relative lg:hidden top-14 md:top-[4.25rem]"
+        className="sticky z-[12] border-y border-border bg-surface pl-28 before:relative top-14 md:top-[4.25rem]"
       >
         <button
           type="button"

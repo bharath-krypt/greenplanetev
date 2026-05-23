@@ -40,7 +40,7 @@ export function CategoryDrawer({ open, onClose }: CategoryDrawerProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[55] bg-[var(--color-overlay)] backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-[55] bg-[var(--color-overlay)] backdrop-blur-sm"
             aria-label="Close categories"
             onClick={onClose}
           />
@@ -49,7 +49,7 @@ export function CategoryDrawer({ open, onClose }: CategoryDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 320 }}
-            className="fixed left-0 top-0 bottom-0 z-[56] w-[min(100vw-3rem,20rem)] bg-surface-elevated border-r border-border flex flex-col shadow-2xl lg:hidden"
+            className="fixed left-0 top-0 bottom-0 z-[56] w-[min(100vw-3rem,20rem)] bg-surface-elevated border-r border-border flex flex-col shadow-2xl"
           >
             <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-4">
               <h2 className="font-display font-bold text-base flex items-center gap-2">

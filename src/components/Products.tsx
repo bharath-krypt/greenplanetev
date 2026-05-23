@@ -7,7 +7,6 @@ import {
 } from "../data/catalog";
 import { useProductFilter } from "../context/ProductFilterContext";
 import { B2BProductCard } from "./B2BProductCard";
-import { CategorySidebar } from "./CategorySidebar";
 
 export function Products() {
   const { activeCollection, selectCategory } = useProductFilter();
@@ -59,53 +58,48 @@ export function Products() {
           </div>
         </div>
 
-        <div className="flex gap-8">
-          <CategorySidebar />
-          <div className="min-w-0 flex-1">
-            {searchResults ? (
-              <div>
-                <p className="text-sm text-muted mb-6">
-                  {searchResults.length} result{searchResults.length === 1 ? "" : "s"} for
-                  &ldquo;{search}&rdquo;
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {searchResults.map((product) => (
-                    <B2BProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-16">
-                {visibleCollections.map((collection) => {
-                  const products = getCollectionProducts(collection.handle);
-                  if (products.length === 0) return null;
-
-                  return (
-                    <section
-                      key={collection.handle}
-                      id={`collection-${collection.handle}`}
-                      className="scroll-mt-32 [content-visibility:auto]"
-                    >
-                      <header className="mb-6 border-b border-border pb-3">
-                        <h3 className="font-display text-xl sm:text-2xl font-bold">
-                          {collection.title}
-                        </h3>
-                        <p className="text-sm text-muted mt-1">
-                          {products.length} product{products.length === 1 ? "" : "s"}
-                        </p>
-                      </header>
-                      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {products.map((product) => (
-                          <B2BProductCard key={product.id} product={product} />
-                        ))}
-                      </div>
-                    </section>
-                  );
-                })}
-              </div>
-            )}
+        {searchResults ? (
+          <div>
+            <p className="text-sm text-muted mb-6">
+              {searchResults.length} result{searchResults.length === 1 ? "" : "s"} for
+              &ldquo;{search}&rdquo;
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {searchResults.map((product) => (
+                <B2BProductCard key={product.id} product={product} />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="space-y-16">
+            {visibleCollections.map((collection) => {
+              const products = getCollectionProducts(collection.handle);
+              if (products.length === 0) return null;
+
+              return (
+                <section
+                  key={collection.handle}
+                  id={`collection-${collection.handle}`}
+                  className="scroll-mt-32 [content-visibility:auto]"
+                >
+                  <header className="mb-6 border-b border-border pb-3">
+                    <h3 className="font-display text-xl sm:text-2xl font-bold">
+                      {collection.title}
+                    </h3>
+                    <p className="text-sm text-muted mt-1">
+                      {products.length} product{products.length === 1 ? "" : "s"}
+                    </p>
+                  </header>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {products.map((product) => (
+                      <B2BProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
