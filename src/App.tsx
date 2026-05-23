@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { CartProvider } from "./context/CartContext";
+import { ProductFilterProvider } from "./context/ProductFilterContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { Marquee } from "./components/Marquee";
 import { PartFinder } from "./components/PartFinder";
-import { Categories } from "./components/Categories";
+import { HorizontalCategoryMenu } from "./components/HorizontalCategoryMenu";
+import { CategoryQuickGrid } from "./components/CategoryQuickGrid";
 import { Products } from "./components/Products";
 import { Features } from "./components/Features";
 import { Testimonials } from "./components/Testimonials";
@@ -23,13 +25,19 @@ function App() {
   return (
     <ThemeProvider>
     <CartProvider>
+    <ProductFilterProvider>
       <Header onSearchOpen={() => setSearchOpen(true)} />
       <main>
         <Hero />
         <Marquee />
         <PartFinder />
-        <Categories />
-        <Products />
+        <div id="home-content">
+          <div id="quick-order-list">
+            <CategoryQuickGrid />
+            <HorizontalCategoryMenu />
+            <Products />
+          </div>
+        </div>
         <Features />
         <Testimonials />
         <FAQ />
@@ -40,6 +48,7 @@ function App() {
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
       <WhatsAppButton />
       <OnboardingTutorial />
+    </ProductFilterProvider>
     </CartProvider>
     </ThemeProvider>
   );

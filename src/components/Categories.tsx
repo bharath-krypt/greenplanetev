@@ -1,11 +1,14 @@
 import { ArrowUpRight } from "lucide-react";
 import { COLLECTIONS } from "../data/catalog";
+import { useProductFilter } from "../context/ProductFilterContext";
 
 const TOP_COLLECTIONS = [...COLLECTIONS]
   .sort((a, b) => b.productIds.length - a.productIds.length)
   .slice(0, 8);
 
 export function Categories() {
+  const { selectCategory } = useProductFilter();
+
   return (
     <section id="categories" className="py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
@@ -23,12 +26,9 @@ export function Categories() {
             <a
               key={cat.handle}
               href={`#products?category=${cat.handle}`}
-              onClick={() => {
-                window.dispatchEvent(
-                  new CustomEvent("filter-products", {
-                    detail: { category: cat.handle },
-                  }),
-                );
+              onClick={(e) => {
+                e.preventDefault();
+                selectCategory(cat.handle);
               }}
               className="group relative p-6 rounded-2xl border border-border bg-surface-card hover:border-brand/40 hover:bg-surface-elevated transition-all duration-300"
             >

@@ -40,6 +40,16 @@ export type Collection = ScrapedCollection & {
   productIds: string[];
 };
 
+/** Site-wide price adjustment applied when loading catalog tiers. */
+export const PRICE_MARKUP = 1.1;
+
+function applyPriceMarkup(tiers: PriceTier[]): PriceTier[] {
+  return tiers.map((tier) => ({
+    ...tier,
+    price: Math.round(tier.price * PRICE_MARKUP),
+  }));
+}
+
 /** Minimum order qty from the first bulk tier label (e.g. "01–05" → 1, "02 Pcs - 05" → 2). */
 export function parseMinQty(tiers: PriceTier[]): number {
   const label = tiers[0]?.qty ?? "";
@@ -64,7 +74,10 @@ function toProduct(p: ScrapedProduct): Product {
     name: p.name,
     category: p.categoryHandles[0] ?? "other",
     image: resolveProductImage(p.imageUrl),
-    tiers: p.tiers.length > 0 ? p.tiers : [{ qty: "1 pc", price: variant?.price ?? 0 }],
+    tiers:
+      p.tiers.length > 0
+        ? applyPriceMarkup(p.tiers)
+        : applyPriceMarkup([{ qty: "1 pc", price: variant?.price ?? 0 }]),
     rating: 4.5,
     reviews: 0,
     description: p.description,

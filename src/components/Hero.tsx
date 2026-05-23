@@ -67,7 +67,7 @@ export function Hero() {
               <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-surface/80 backdrop-blur-md border border-border">
                 <p className="text-xs text-brand font-medium">Featured</p>
                 <p className="font-semibold mt-0.5">
-                  1000W Hub Motor — from ₹3,700/pc
+                  1000W Hub Motor — from ₹4,070/pc
                 </p>
                 <p className="text-xs text-muted mt-1">
                   Bulk tiers · Same-day dispatch

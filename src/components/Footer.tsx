@@ -48,7 +48,7 @@ export function Footer() {
         <div className="mt-10 pt-8 border-t border-border text-xs text-muted">
           <p>© {year} {COMPANY.name}. All rights reserved.</p>
           <p className="mt-2 flex flex-wrap items-center gap-1">
-            <span>Developed by</span>
+            <span>Designed and developed by</span>
             <a
               href="https://portfolio-five-woad-40.vercel.app/"
               target="_blank"

@@ -8,12 +8,50 @@ type B2BProductCardProps = {
   product: Product;
 };
 
-function formatDescription(description?: string, tiers?: Product["tiers"]) {
-  if (description?.trim()) {
-    return description.replace(/^Quantity and Rates?:\n?/i, "").trim();
-  }
-  if (!tiers?.length) return "";
-  return tiers.map((t) => `${t.qty}: ₹${t.price}`).join("\n");
+const PRICE_LINE =
+  /(?:^|\s)(?:Rs\.?|₹)\s*[\d,]+(?:\.\d+)?|:\s*(?:Rs\.?|₹)\s*[\d,]+(?:\.\d+)?/i;
+
+function formatTierPricing(tiers: Product["tiers"]): string {
+  return tiers.map((t) => `${t.qty}: ₹${t.price.toLocaleString("en-IN")}`).join("\n");
+}
+
+/** Use qty labels from description when scraped tiers only say "per unit". */
+function withDescriptionQtyLabels(
+  description: string | undefined,
+  tiers: Product["tiers"],
+): Product["tiers"] {
+  if (!description?.trim() || tiers.length === 0) return tiers;
+
+  const labels = description
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => PRICE_LINE.test(line))
+    .map((line) => line.match(/^(.+?):\s*(?:Rs\.?|₹)/i)?.[1]?.trim())
+    .filter((label): label is string => !!label);
+
+  const genericQty = tiers.every((t) => /^per unit$/i.test(t.qty.trim()));
+  if (!genericQty || labels.length !== tiers.length) return tiers;
+
+  return tiers.map((tier, i) => ({ ...tier, qty: labels[i] ?? tier.qty }));
+}
+
+/** Card body: marked-up tiers for prices; description only for non-price notes. */
+function formatCardBody(description: string | undefined, tiers: Product["tiers"]): string {
+  const displayTiers = withDescriptionQtyLabels(description, tiers);
+  const pricing = displayTiers.length > 0 ? formatTierPricing(displayTiers) : "";
+
+  if (!description?.trim()) return pricing;
+
+  const notes = description
+    .replace(/^Quantity and (?:Rates?|Price):?\s*/im, "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !PRICE_LINE.test(line))
+    .join("\n")
+    .trim();
+
+  if (notes && pricing) return `${notes}\n\n${pricing}`;
+  return pricing || notes;
 }
 
 export function B2BProductCard({ product }: B2BProductCardProps) {
@@ -26,7 +64,7 @@ export function B2BProductCard({ product }: B2BProductCardProps) {
   const unitPrice = product.tiers[tierIndex]?.price ?? product.tiers[0]?.price ?? 0;
 
   const description = useMemo(
-    () => formatDescription(product.description, product.tiers),
+    () => formatCardBody(product.description, product.tiers),
     [product.description, product.tiers],
   );
 
@@ -74,13 +112,18 @@ export function B2BProductCard({ product }: B2BProductCardProps) {
 
         <div className="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
           {qty === 0 ? (
-            <button
-              type="button"
-              onClick={handleAdd}
-              className="rounded-xl bg-brand px-5 py-2 text-sm font-semibold text-on-brand hover:bg-brand-dim transition-colors"
-            >
-              Add
-            </button>
+            <div className="flex w-full items-center justify-between gap-2">
+              <span className="text-sm font-semibold text-brand">
+                ₹{(product.tiers[0]?.price ?? 0).toLocaleString("en-IN")}
+              </span>
+              <button
+                type="button"
+                onClick={handleAdd}
+                className="rounded-xl bg-brand px-5 py-2 text-sm font-semibold text-on-brand hover:bg-brand-dim transition-colors"
+              >
+                Add
+              </button>
+            </div>
           ) : (
             <div className="flex items-center gap-1">
               <button

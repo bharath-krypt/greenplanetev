@@ -9,6 +9,13 @@ export const COMPANY = {
   gstNote: "All items +18% GST · EV chargers +5% GST",
 };
 
+export const COLLABORATOR = {
+  name: "Baluka E Motors",
+  shortName: "BEM",
+  logo: "/1000122634.png",
+  website: "https://balukaemotors.com",
+};
+
 export const STATS = [
   { value: "700+", label: "SKUs in stock" },
   { value: "50+", label: "Product categories" },
@@ -109,7 +116,7 @@ export const FAQS = [
 ];
 
 export const NAV_LINKS = [
-  { href: "#categories", label: "Categories" },
+  { href: "#quick-order-list", label: "Categories" },
   { href: "#products", label: "Products" },
   { href: "#why-us", label: "Why Us" },
   { href: "#reviews", label: "Reviews" },

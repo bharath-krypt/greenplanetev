@@ -105,6 +105,38 @@ body {
   }
 }
 
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes collab-ring {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-brand) 0%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 32%, transparent);
+  }
+}
+
+.brand-collab-pulse {
+  animation: collab-ring 2.8s ease-in-out infinite;
+}
+
+.group:hover .brand-collab-pulse {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-collab-pulse {
+    animation: none;
+  }
+}
+
 .flowing-text {
   background-image: linear-gradient(
     90deg,
