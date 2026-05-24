@@ -40,7 +40,7 @@ function CollabLogos({
   return (
     <motion.span
       className="relative shrink-0"
-      aria-label={`${COMPANY.name}, in partnership with ${COLLABORATOR.name}`}
+      aria-label={`${COMPANY.name}, strategic partner ${COLLABORATOR.name}`}
       initial={reduceMotion ? false : "hidden"}
       animate="visible"
       whileHover={reduceMotion ? undefined : "hover"}
@@ -92,7 +92,7 @@ function CollabLogos({
               }
         }
         className={`absolute flex items-center justify-center overflow-hidden rounded-full border-border/80 bg-white shadow-md ring-2 ring-surface ${s.secondary} ${s.offset} ${reduceMotion ? "" : "brand-collab-pulse"}`}
-        title={`In partnership with ${COLLABORATOR.name}`}
+        title={`Strategic partner: ${COLLABORATOR.name}`}
       >
         <img
           src={COLLABORATOR.logo}
@@ -134,7 +134,7 @@ export function BrandLogo({
             animate={{ opacity: 1 }}
             transition={{ delay: 0.52, duration: 0.3 }}
           >
-            In partnership with{" "}
+            Strategic partner{" "}
             <span className="font-semibold text-brand">{COLLABORATOR.name}</span>
           </motion.span>
         </motion.span>

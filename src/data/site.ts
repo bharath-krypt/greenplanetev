@@ -51,7 +51,6 @@ export type Product = {
   shopifyId?: string;
   variantId?: string;
   available?: boolean;
-  url?: string;
 };
 
 export { ALL_PRODUCTS as PRODUCTS, COLLECTIONS, TOTAL_PRODUCTS } from "./catalog";

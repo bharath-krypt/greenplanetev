@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CartProvider } from "./context/CartContext";
+import { ProductDetailProvider } from "./context/ProductDetailContext";
 import { ProductFilterProvider } from "./context/ProductFilterContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { Header } from "./components/Header";
@@ -15,6 +16,7 @@ import { FAQ } from "./components/FAQ";
 import { Contact } from "./components/Contact";
 import { Footer } from "./components/Footer";
 import { CartDrawer } from "./components/CartDrawer";
+import { ProductDetailModal } from "./components/ProductDetailModal";
 import { SearchModal } from "./components/SearchModal";
 import { WhatsAppButton } from "./components/WhatsAppButton";
 import { OnboardingTutorial } from "./components/OnboardingTutorial";
@@ -25,6 +27,7 @@ function App() {
   return (
     <ThemeProvider>
     <CartProvider>
+    <ProductDetailProvider>
     <ProductFilterProvider>
       <Header onSearchOpen={() => setSearchOpen(true)} />
       <main>
@@ -46,9 +49,11 @@ function App() {
       <Footer />
       <CartDrawer />
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <ProductDetailModal />
       <WhatsAppButton />
       <OnboardingTutorial />
     </ProductFilterProvider>
+    </ProductDetailProvider>
     </CartProvider>
     </ThemeProvider>
   );

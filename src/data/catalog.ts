@@ -85,8 +85,20 @@ function toProduct(p: ScrapedProduct): Product {
     shopifyId: String(p.shopifyId),
     variantId: variant ? String(variant.id) : undefined,
     available: p.available,
-    url: p.url,
   };
+}
+
+/** Same-category products for the detail spotlight (excludes the current SKU). */
+export function getRelatedProducts(product: Product, limit = 4): Product[] {
+  const sameCategory = ALL_PRODUCTS.filter(
+    (p) => p.id !== product.id && p.category === product.category,
+  );
+  if (sameCategory.length >= limit) return sameCategory.slice(0, limit);
+
+  const rest = ALL_PRODUCTS.filter(
+    (p) => p.id !== product.id && p.category !== product.category,
+  );
+  return [...sameCategory, ...rest].slice(0, limit);
 }
 
 export const ALL_PRODUCTS: Product[] = data.products

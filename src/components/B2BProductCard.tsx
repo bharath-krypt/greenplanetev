@@ -2,60 +2,17 @@ import { Minus, Plus } from "lucide-react";
 import { useMemo } from "react";
 import type { Product } from "../data/site";
 import { useCart } from "../context/CartContext";
+import { useProductDetail } from "../context/ProductDetailContext";
+import { formatCardBody } from "../utils/productPricing";
 import { ProductImage } from "./ProductImage";
 
 type B2BProductCardProps = {
   product: Product;
 };
 
-const PRICE_LINE =
-  /(?:^|\s)(?:Rs\.?|₹)\s*[\d,]+(?:\.\d+)?|:\s*(?:Rs\.?|₹)\s*[\d,]+(?:\.\d+)?/i;
-
-function formatTierPricing(tiers: Product["tiers"]): string {
-  return tiers.map((t) => `${t.qty}: ₹${t.price.toLocaleString("en-IN")}`).join("\n");
-}
-
-/** Use qty labels from description when scraped tiers only say "per unit". */
-function withDescriptionQtyLabels(
-  description: string | undefined,
-  tiers: Product["tiers"],
-): Product["tiers"] {
-  if (!description?.trim() || tiers.length === 0) return tiers;
-
-  const labels = description
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => PRICE_LINE.test(line))
-    .map((line) => line.match(/^(.+?):\s*(?:Rs\.?|₹)/i)?.[1]?.trim())
-    .filter((label): label is string => !!label);
-
-  const genericQty = tiers.every((t) => /^per unit$/i.test(t.qty.trim()));
-  if (!genericQty || labels.length !== tiers.length) return tiers;
-
-  return tiers.map((tier, i) => ({ ...tier, qty: labels[i] ?? tier.qty }));
-}
-
-/** Card body: marked-up tiers for prices; description only for non-price notes. */
-function formatCardBody(description: string | undefined, tiers: Product["tiers"]): string {
-  const displayTiers = withDescriptionQtyLabels(description, tiers);
-  const pricing = displayTiers.length > 0 ? formatTierPricing(displayTiers) : "";
-
-  if (!description?.trim()) return pricing;
-
-  const notes = description
-    .replace(/^Quantity and (?:Rates?|Price):?\s*/im, "")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line && !PRICE_LINE.test(line))
-    .join("\n")
-    .trim();
-
-  if (notes && pricing) return `${notes}\n\n${pricing}`;
-  return pricing || notes;
-}
-
 export function B2BProductCard({ product }: B2BProductCardProps) {
   const { items, setQty } = useCart();
+  const { openProduct } = useProductDetail();
   const minQty = product.minQty ?? 1;
 
   const cartItem = items.find((i) => i.product.id === product.id);
@@ -86,18 +43,18 @@ export function B2BProductCard({ product }: B2BProductCardProps) {
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface-card shadow-sm transition-shadow hover:shadow-md">
-      <a
-        href={product.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block aspect-square overflow-hidden bg-surface-elevated"
+      <button
+        type="button"
+        onClick={() => openProduct(product)}
+        className="block aspect-square w-full overflow-hidden bg-surface-elevated cursor-pointer hover:opacity-95 transition-opacity"
+        aria-label={`View details for ${product.name}`}
       >
         <ProductImage
           src={product.image}
           alt={product.name}
           className="h-full w-full object-contain p-2"
         />
-      </a>
+      </button>
 
       <div className="flex flex-1 flex-col p-4">
         <h3 className="text-sm font-semibold leading-snug line-clamp-2 min-h-[2.5rem]">
