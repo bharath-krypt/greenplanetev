@@ -41,13 +41,25 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-sm mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-muted">
-              <li>{COMPANY.phone}</li>
+              <li>
+                <a
+                  href={`tel:${COMPANY.phone.replace(/[^\d+]/g, "")}`}
+                  className="hover:text-brand"
+                >
+                  {COMPANY.phone}
+                </a>
+              </li>
+              <li>
+                <a href="tel:+917680922389" className="hover:text-brand">
+                  +91 76809 22389
+                </a>
+              </li>
             </ul>
           </div>
         </div>
-        <div className="mt-10 pt-8 border-t border-border text-xs text-muted">
+        <div className="mt-10 pt-8 border-t border-border text-xs text-muted text-center">
           <p>© {year} {COMPANY.name}. All rights reserved.</p>
-          <p className="mt-2 flex flex-wrap items-center gap-1">
+          <p className="mt-2 flex flex-wrap justify-center items-center gap-1">
             <span>Designed and developed by</span>
             <a
               href="https://portfolio-five-woad-40.vercel.app/"
