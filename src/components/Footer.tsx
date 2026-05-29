@@ -59,20 +59,6 @@ export function Footer() {
         </div>
         <div className="mt-10 pt-8 border-t border-border text-xs text-muted text-center">
           <p>© {year} {COMPANY.name}. All rights reserved.</p>
-          <p className="mt-2 flex flex-wrap justify-center items-center gap-1">
-            <span>Designed and developed by</span>
-            <a
-              href="https://portfolio-five-woad-40.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flowing-text font-display text-sm sm:text-base font-semibold hover:opacity-90 transition-opacity"
-            >
-              Bharath Kumar Pamulaparthy
-            </a>
-            <span className="text-brand" aria-hidden>
-              ✦
-            </span>
-          </p>
         </div>
       </div>
     </footer>
