@@ -78,7 +78,14 @@ export function CartDrawer() {
                           </p>
                           <p className="text-xs text-muted mt-0.5">{tier?.qty}</p>
                           <p className="text-brand font-bold mt-1">
-                            ₹{(tier?.price ?? 0) * item.qty}
+                            ₹{(tier?.price ?? 0).toLocaleString("en-IN")}
+                            {item.qty > 1 && (
+                              <span className="text-xs font-normal text-muted">
+                                {" "}
+                                × {item.qty} = ₹
+                                {((tier?.price ?? 0) * item.qty).toLocaleString("en-IN")}
+                              </span>
+                            )}
                           </p>
                           <div className="flex items-center gap-2 mt-2">
                             <button
@@ -120,7 +127,7 @@ export function CartDrawer() {
                 <div className="p-5 border-t border-border space-y-3">
                   <div className="flex justify-between text-lg font-bold">
                     <span>Estimate</span>
-                    <span className="text-brand">₹{total}</span>
+                    <span className="text-brand">₹{total.toLocaleString("en-IN")}</span>
                   </div>
                   <p className="text-xs text-muted">
                     Final price incl. GST confirmed on WhatsApp

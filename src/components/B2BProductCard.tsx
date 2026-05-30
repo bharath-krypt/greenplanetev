@@ -1,5 +1,6 @@
 import { Minus, Plus } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { parseMinQty } from "../data/catalog";
 import type { Product } from "../data/site";
 import { useCart } from "../context/CartContext";
 import { useProductDetail } from "../context/ProductDetailContext";
@@ -14,6 +15,7 @@ export function B2BProductCard({ product }: B2BProductCardProps) {
   const { items, setQty } = useCart();
   const { openProduct } = useProductDetail();
   const minQty = product.minQty ?? 1;
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const cartItem = items.find((i) => i.product.id === product.id);
   const qty = cartItem?.qty ?? 0;
@@ -24,8 +26,19 @@ export function B2BProductCard({ product }: B2BProductCardProps) {
     () => formatCardBody(product.description, product.tiers),
     [product.description, product.tiers],
   );
+  const quickQtyOptions = useMemo(() => {
+    const tierStarts = product.tiers.map((tier) => parseMinQty([tier]));
+    return Array.from(new Set([1, ...tierStarts])).sort((a, b) => a - b);
+  }, [product.tiers]);
 
-  const handleAdd = () => setQty(product, minQty);
+  useEffect(() => {
+    if (qty > 0) setPickerOpen(false);
+  }, [qty]);
+
+  const handleAdd = () => setPickerOpen((prev) => !prev);
+  const handleSelectQty = (selectedQty: number) => {
+    setQty(product, selectedQty);
+  };
   const handlePlus = () => setQty(product, qty + 1);
   const handleMinus = () => {
     if (qty <= minQty) setQty(product, 0);
@@ -69,7 +82,7 @@ export function B2BProductCard({ product }: B2BProductCardProps) {
 
         <div className="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
           {qty === 0 ? (
-            <div className="flex w-full items-center justify-between gap-2">
+            <div className="relative flex w-full items-center justify-between gap-2">
               <span className="text-sm font-semibold text-brand">
                 ₹{(product.tiers[0]?.price ?? 0).toLocaleString("en-IN")}
               </span>
@@ -80,6 +93,23 @@ export function B2BProductCard({ product }: B2BProductCardProps) {
               >
                 Add
               </button>
+              {pickerOpen && (
+                <div className="absolute bottom-full right-0 mb-2 w-48 rounded-xl border border-border bg-surface-elevated p-2 shadow-lg">
+                  <p className="mb-2 text-[11px] font-medium text-muted">Select quantity</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {quickQtyOptions.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => handleSelectQty(option)}
+                        className="rounded-md border border-border px-2 py-1 text-xs font-semibold text-foreground hover:border-brand/40 hover:text-brand"
+                      >
+                        {option}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex items-center gap-1">
@@ -107,7 +137,9 @@ export function B2BProductCard({ product }: B2BProductCardProps) {
               >
                 <Plus className="h-4 w-4" />
               </button>
-              <span className="ml-2 text-sm font-semibold text-brand">₹{unitPrice}</span>
+              <span className="ml-2 text-sm font-semibold text-brand">
+                ₹{unitPrice.toLocaleString("en-IN")}
+              </span>
             </div>
           )}
         </div>

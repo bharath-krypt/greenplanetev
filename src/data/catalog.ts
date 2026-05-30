@@ -1,5 +1,6 @@
 import raw from "../../scraped/products.json";
 import { resolveProductImage } from "../utils/productImage";
+import { withDescriptionQtyLabels } from "../utils/productPricing";
 import type { PriceTier, Product } from "./site";
 
 type ScrapedVariant = {
@@ -67,21 +68,28 @@ export function tierIndexForQty(tiers: PriceTier[], qty: number): number {
   return best;
 }
 
+function resolveTiers(description: string, tiers: PriceTier[]): PriceTier[] {
+  const markedUp = applyPriceMarkup(tiers);
+  return withDescriptionQtyLabels(description, markedUp);
+}
+
 function toProduct(p: ScrapedProduct): Product {
   const variant = p.variants[0];
+  const tiers =
+    p.tiers.length > 0
+      ? resolveTiers(p.description, p.tiers)
+      : applyPriceMarkup([{ qty: "1 pc", price: variant?.price ?? 0 }]);
+
   return {
     id: p.id,
     name: p.name,
     category: p.categoryHandles[0] ?? "other",
     image: resolveProductImage(p.imageUrl),
-    tiers:
-      p.tiers.length > 0
-        ? applyPriceMarkup(p.tiers)
-        : applyPriceMarkup([{ qty: "1 pc", price: variant?.price ?? 0 }]),
+    tiers,
     rating: 4.5,
     reviews: 0,
     description: p.description,
-    minQty: parseMinQty(p.tiers),
+    minQty: parseMinQty(tiers),
     shopifyId: String(p.shopifyId),
     variantId: variant ? String(variant.id) : undefined,
     available: p.available,
